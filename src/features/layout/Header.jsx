@@ -1,15 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { ShoppingBasket } from "lucide-react";
+"use client";
+
 import Image from "next/image";
+import { HeaderCart } from "../cart/HeaderCart";
 
 export const Header = () => {
   return (
-    <header className="px-4 border-b pb-2 flex items-center gap-2">
+    <header className="flex items-center gap-2 border-b px-4 pb-2">
       <Image src="/h-logo.png" alt="Healthdonald Logo" width={50} height={50} />
       <span className="font-semibold">Healthdonals</span>
-      <Button size="sm" variant="outline" className="ml-auto">
-        <ShoppingBasket className="size-4" />
-      </Button>
+      <HeaderCart />
     </header>
   );
 };

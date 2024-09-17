@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/features/layout/Header";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
@@ -30,7 +31,8 @@ export default function RootLayout({ children }) {
           "h-full bg-white dark:bg-black"
         )}
       >
-        <div className="max-w-md border-x m-auto min-h-full flex flex-col gap-2 py-4">
+        <Toaster />
+        <div className="relative m-auto flex min-h-full max-w-md flex-col gap-2 border-x py-4">
           <Header />
           <div className="flex-1 overflow-auto">{children}</div>
         </div>
