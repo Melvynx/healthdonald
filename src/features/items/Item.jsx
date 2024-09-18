@@ -1,20 +1,77 @@
-/* eslint-disable @next/next/no-img-element */
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { deleteItem } from "@/lib/items/delete-item";
 import { formatPrice } from "@/lib/price";
 import { useCartStore } from "@/lib/store/cart-store";
+import { useUserStore } from "@/lib/store/user-store";
+import { cn } from "@/lib/utils";
+import { Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { mutate } from "swr";
 
-export const Item = ({ item }) => {
+export const Item = ({ item, className }) => {
+  const isAdmin = useUserStore((state) => state.isAdmin);
   return (
-    <Card className="p-2">
+    <div
+      className={cn("relative rounded-md border p-3 shadow-inner", className)}
+    >
+      <p className="absolute right-2 top-2 font-mono font-bold">
+        {formatPrice(item.price)}
+      </p>
       <img src={item.image} className="aspect-square w-full rounded-md" />
-      <p className="text-lg font-bold">{item.name}</p>
-      <div className="flex items-center gap-2">
-        <p className="font-mono font-bold">{formatPrice(item.price)}</p>
-        <div className="ml-auto" />
+      <p className="line-clamp-1 text-sm font-semibold">{item.name}</p>
+      <div className="flex w-full items-end justify-end">
         <ItemAddButton item={item} />
       </div>
-    </Card>
+      {isAdmin ? (
+        <div className="mt-2 flex w-full justify-end">
+          <Link
+            href={`/items/${item.id}`}
+            className={buttonVariants({ size: "sm", variant: "outline" })}
+          >
+            <Edit size={16} />
+          </Link>
+          <DeleteItemButton item={item} />
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+export const DeleteItemButton = ({ item }) => {
+  const onDelete = async () => {
+    await deleteItem(item.id);
+    mutate((key) => typeof key === "string" && key.startsWith("/categories/"));
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button size="sm" variant="outline">
+          <Trash2 size={16} />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete {item.name} ?</AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => onDelete()}>
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
@@ -25,7 +82,7 @@ const ItemAddButton = ({ item }) => {
 
   if (!currentItem) {
     return (
-      <Button size="sm" className="ml-auto" onClick={() => addItem(item)}>
+      <Button size="sm" onClick={() => addItem(item)}>
         Add
       </Button>
     );

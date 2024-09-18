@@ -1,17 +1,13 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { formatPrice } from "@/lib/price";
-import {
-  useCartStore,
-  useTotalItems,
-  useTotalPrice,
-} from "@/lib/store/cart-store";
+import { useTotalItems, useTotalPrice } from "@/lib/store/cart-store";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { CartLine } from "./CartLine";
+import { FullCart } from "./FullCart";
 
 export const FooterCart = () => {
   const [open, setOpen] = useState(false);
-  const items = useCartStore((state) => state.items);
   const totalItems = useTotalItems();
   const totalPrice = useTotalPrice();
 
@@ -20,47 +16,44 @@ export const FooterCart = () => {
   }
 
   return (
-    <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 rounded-t-lg border bg-card p-6 shadow-md">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="absolute inset-x-4 top-0 flex items-center justify-center hover:bg-transparent"
-        onClick={() => setOpen(!open)}
-      >
-        {open ? (
-          <ChevronDown className="size-6" />
-        ) : (
-          <ChevronUp className="size-6" />
-        )}
-      </Button>
+    <>
+      <div className="h-32"></div>
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 rounded-t-lg border bg-card p-6 shadow-md">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute inset-x-4 top-0 flex items-center justify-center hover:bg-transparent"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? (
+            <ChevronDown className="size-6" />
+          ) : (
+            <ChevronUp className="size-6" />
+          )}
+        </Button>
 
-      {open ? (
-        <>
+        {open ? <FullCart /> : null}
+        {open ? (
+          <Link
+            className={buttonVariants({ size: "lg", className: "w-full" })}
+            href="/checkout"
+          >
+            Checkout
+          </Link>
+        ) : (
           <div className="flex items-center gap-4">
-            <p className="text-lg font-bold">Cart</p>
+            <Link
+              className={buttonVariants({ size: "lg", className: "w-full" })}
+              href="/checkout"
+            >
+              Checkout
+            </Link>
             <p className="ml-auto text-lg font-bold">
               {formatPrice(totalPrice)}
             </p>
           </div>
-          <div className="flex max-h-40 flex-col gap-2 overflow-auto py-4">
-            {Object.values(items).map((item) => (
-              <CartLine
-                item={item.item}
-                quantity={item.quantity}
-                key={item.id}
-              />
-            ))}
-          </div>
-        </>
-      ) : null}
-      {open ? (
-        <Button className="w-full">Checkout</Button>
-      ) : (
-        <div className="flex items-center gap-4">
-          <Button className="w-full">Checkout</Button>
-          <p className="ml-auto text-lg font-bold">{formatPrice(totalPrice)}</p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };

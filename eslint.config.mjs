@@ -34,6 +34,7 @@ export default [
       "react/react-in-jsx-scope": 0,
       "react/no-unescaped-entities": 0,
       "react/prop-types": 0,
+      "@next/next/no-img-element": 0,
     },
   },
   // Ignore files
