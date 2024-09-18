@@ -9,7 +9,6 @@ export const getItems = async (category) => {
   }
 
   const docSnap = await getDocs(docRef);
-  console.log({ docSnap });
 
   const data = [];
   docSnap.forEach((d) => {

@@ -9,7 +9,6 @@ export const ItemsList = () => {
 
   const { data, isLoading } = useSWR(`/categories/${categoryId}`, async () => {
     const items = await getItems(categoryId);
-    console.log({ items });
     return items;
   });
 

@@ -1,13 +1,21 @@
+import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/price";
+import { useCartStore } from "@/lib/store/cart-store";
+import { Minus, Trash2 } from "lucide-react";
 
-/* eslint-disable @next/next/no-img-element */
 export const CartLine = ({ item, quantity = 0 }) => {
+  const removeItem = useCartStore((state) => state.removeItem);
+
   return (
     <div className="flex items-center gap-4">
       <ItemImageCard quantity={quantity} imageUrl={item.image} />
       <p className="text-lg font-semibold">{item.name}</p>
-      <div className="ml-auto"></div>
-      <p className="font-mono">{formatPrice(item.price * quantity)}</p>
+      <div className="ml-auto flex items-center gap-2">
+        <p className="font-mono">{formatPrice(item.price * quantity)}</p>
+        <Button size="sm" variant="outline" onClick={() => removeItem(item)}>
+          {quantity === 1 ? <Trash2 size={16} /> : <Minus size={16} />}
+        </Button>
+      </div>
     </div>
   );
 };

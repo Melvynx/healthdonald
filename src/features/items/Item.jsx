@@ -11,15 +11,15 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { deleteItem } from "@/lib/items/delete-item";
 import { formatPrice } from "@/lib/price";
+import { useIsAdminEnabled } from "@/lib/store/admin-store";
 import { useCartStore } from "@/lib/store/cart-store";
-import { useUserStore } from "@/lib/store/user-store";
 import { cn } from "@/lib/utils";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Minus, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { mutate } from "swr";
 
 export const Item = ({ item, className }) => {
-  const isAdmin = useUserStore((state) => state.isAdmin);
+  const isAdmin = useIsAdminEnabled();
   return (
     <div
       className={cn("relative rounded-md border p-3 shadow-inner", className)}
@@ -91,11 +91,11 @@ const ItemAddButton = ({ item }) => {
   return (
     <div className="flex items-center gap-1">
       <Button variant="ghost" size="sm" onClick={() => removeItem(item)}>
-        -
+        <Minus size={16} />
       </Button>
       <p className="aspect-square w-6 text-center">{currentItem.quantity}</p>
       <Button variant="ghost" size="sm" onClick={() => addItem(item)}>
-        +
+        <Plus size={16} />
       </Button>
     </div>
   );

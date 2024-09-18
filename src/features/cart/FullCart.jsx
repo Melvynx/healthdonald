@@ -3,8 +3,9 @@ import { formatPrice } from "@/lib/price";
 import { useCartStore, useTotalPrice } from "@/lib/store/cart-store";
 import { Rabbit } from "lucide-react";
 import { CartLine } from "./CartLine";
+import { cn } from "@/lib/utils";
 
-export const FullCart = () => {
+export const FullCart = ({ cartLineClassName }) => {
   const items = useCartStore((state) => state.items);
   const totalPrice = useTotalPrice();
 
@@ -26,7 +27,12 @@ export const FullCart = () => {
         <p className="text-lg font-bold">Cart</p>
         <p className="ml-auto text-lg font-bold">{formatPrice(totalPrice)}</p>
       </div>
-      <div className="flex max-h-40 flex-col gap-2 overflow-auto py-4">
+      <div
+        className={cn(
+          "flex flex-col gap-2 overflow-auto py-4",
+          cartLineClassName
+        )}
+      >
         {Object.values(items).map((item) => (
           <CartLine item={item.item} quantity={item.quantity} key={item.id} />
         ))}

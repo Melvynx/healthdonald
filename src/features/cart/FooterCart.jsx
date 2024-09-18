@@ -32,7 +32,7 @@ export const FooterCart = () => {
           )}
         </Button>
 
-        {open ? <FullCart /> : null}
+        {open ? <FullCart cartLineClassName="max-h-40" /> : null}
         {open ? (
           <Link
             className={buttonVariants({ size: "lg", className: "w-full" })}

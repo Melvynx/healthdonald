@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,6 +24,7 @@ import { FirebaseImageUpload } from "@/features/firebase-image-upload/FirebaseIm
 import { getItem } from "@/lib/items/get-item";
 import { setItem } from "@/lib/items/set-item";
 import { parseId } from "@/lib/parse-id";
+import { useUserStore } from "@/lib/store/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -46,6 +48,17 @@ export default function ItemPage({ params }) {
     const item = await getItem(params.itemId);
     return item;
   });
+  const isAdmin = useUserStore((state) => state.isAdmin);
+
+  if (!isAdmin) {
+    return (
+      <div className="px-4">
+        <Alert>
+          <AlertTitle>You are not allowed to access this page</AlertTitle>
+        </Alert>
+      </div>
+    );
+  }
 
   if (params.itemId === "new") {
     return <ItemForm />;
@@ -78,6 +91,13 @@ const ItemForm = ({ defaultItem }) => {
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values) {
+    if (!defaultItem) {
+      const item = await getItem(values.id);
+      if (item) {
+        toast.error("Item with this ID already exists");
+        return;
+      }
+    }
     try {
       setLoading(true);
       const ID = defaultItem?.id ?? values.id;
@@ -98,7 +118,9 @@ const ItemForm = ({ defaultItem }) => {
 
   return (
     <div className="px-4">
-      <h2 className="mb-4 text-xl font-bold">Add a new item</h2>
+      <h2 className="mb-4 text-xl font-bold">
+        {defaultItem ? "Edit" : "Add"} an item
+      </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

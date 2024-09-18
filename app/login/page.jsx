@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useUserStore } from "@/lib/store/user-store";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function LoginPage() {
   const setUsername = useUserStore((state) => state.setUserName);
   const router = useRouter();
   return (

@@ -14,7 +14,7 @@ export const Header = () => {
     <header className="flex items-center gap-2 border-b px-4 pb-2">
       <Link href="/" className="flex items-center gap-1">
         <Image
-          src="/h-logo.png"
+          src="/healthdonals.png"
           alt="Healthdonald Logo"
           width={50}
           height={50}

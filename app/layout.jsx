@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { AdminMenu } from "@/features/admin/admin-menu";
 import { Header } from "@/features/layout/Header";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
           <Header />
           <div className="flex-1 overflow-hidden pt-2">{children}</div>
         </div>
+        <AdminMenu />
       </body>
     </html>
   );
