@@ -26,6 +26,7 @@ import { setItem } from "@/lib/items/set-item";
 import { parseId } from "@/lib/parse-id";
 import { useUserStore } from "@/lib/store/user-store";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -91,13 +92,6 @@ const ItemForm = ({ defaultItem }) => {
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(values) {
-    if (!defaultItem) {
-      const item = await getItem(values.id);
-      if (item) {
-        toast.error("Item with this ID already exists");
-        return;
-      }
-    }
     try {
       setLoading(true);
       const ID = defaultItem?.id ?? values.id;
@@ -137,7 +131,7 @@ const ItemForm = ({ defaultItem }) => {
                       field.onChange(e);
                       const value = e.target.value;
                       if (!defaultItem) {
-                        form.setValue("id", parseId(value));
+                        form.setValue("id", `${parseId(value)}-${nanoid(5)}`);
                       }
                     }}
                   />
@@ -146,21 +140,7 @@ const ItemForm = ({ defaultItem }) => {
               </FormItem>
             )}
           />
-          {!defaultItem ? (
-            <FormField
-              control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter item ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ) : null}
+
           <FormField
             control={form.control}
             name="category"
