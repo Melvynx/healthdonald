@@ -14,7 +14,7 @@ export const deleteItem = async (id) => {
   if (item) {
     if (item.imagePath) {
       const storageRef = ref(storage, item.imagePath);
-      deleteObject(storageRef);
+      await deleteObject(storageRef);
     }
   }
   await deleteDoc(doc(db, "items", id));

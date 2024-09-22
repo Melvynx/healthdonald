@@ -1,5 +1,10 @@
 import { collection, doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { toast } from "sonner";
 import { db, storage } from "../firebase";
 import { useUserStore } from "../store/user-store";
@@ -10,6 +15,12 @@ export const setItem = async (id, item) => {
   }
 
   if (item.image instanceof File) {
+    // Si l'item à déjà une image
+    if (item.imagePath) {
+      const storageRef = ref(storage, item.imagePath);
+      await deleteObject(storageRef);
+    }
+
     const storageRefName = `images/${item.image.name}`;
     const storageRef = ref(storage, storageRefName);
     try {
